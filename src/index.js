@@ -82,13 +82,21 @@ const main = async () => {
 
     let lcovArray = [];
     let lcovBaseArray = [];
+
     if (monorepoBasePath) {
-        const parts = monorepoBasePath.split(',');
+        console.log(`Processing monorepoBasePath '${monorepoBasePath}' `);
+        const parts = monorepoBasePath.split(",");
+        console.log(`Parsed monorepoBasePath '${parts}' `);
         parts.forEach(item => {
+            console.log(`Part monorepoBasePath '${item}' `);
             const lcovFiles = getLcovFiles(item);
-            lcovArray = lcovArray.concat(lcovFiles)
+            console.log({ lcovFiles });
+            lcovArray = lcovArray.concat(lcovFiles);
+            console.log({ lcovArray });
             const lcovBaseFiles = getLcovBaseFiles(item);
-            lcovBaseArray = lcovBaseArray.concat(lcovBaseFiles)
+            console.log({ lcovBaseFiles });
+            lcovBaseArray = lcovBaseArray.concat(lcovBaseFiles);
+            console.log({ lcovBaseArray });
         });
     }
 

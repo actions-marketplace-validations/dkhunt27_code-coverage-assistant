@@ -6342,10 +6342,25 @@ const main = async () => {
         console.log(`No coverage report found at '${baseFile}', ignoring...`);
     }
 
-    const lcovArray = monorepoBasePath ? getLcovFiles(monorepoBasePath) : [];
-    const lcovBaseArray = monorepoBasePath
-        ? getLcovBaseFiles(monorepoBasePath)
-        : [];
+    let lcovArray = [];
+    let lcovBaseArray = [];
+
+    if (monorepoBasePath) {
+        console.log(`Processing monorepoBasePath '${monorepoBasePath}' `);
+        const parts = monorepoBasePath.split(",");
+        console.log(`Parsed monorepoBasePath '${parts}' `);
+        parts.forEach(item => {
+            console.log(`Part monorepoBasePath '${item}' `);
+            const lcovFiles = getLcovFiles(item);
+            console.log({ lcovFiles });
+            lcovArray = lcovArray.concat(lcovFiles);
+            console.log({ lcovArray });
+            const lcovBaseFiles = getLcovBaseFiles(item);
+            console.log({ lcovBaseFiles });
+            lcovBaseArray = lcovBaseArray.concat(lcovBaseFiles);
+            console.log({ lcovBaseArray });
+        });
+    }
 
     const lcovArrayForMonorepo = [];
     const lcovBaseArrayForMonorepo = [];
