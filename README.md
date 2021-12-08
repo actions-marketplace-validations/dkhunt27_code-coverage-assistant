@@ -27,7 +27,7 @@ The possible inputs for this action are:
 | Parameter                           | Description                                                                                                                                                                      | Default                |
 | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
 | `github-token` (**Required**)       | Github token used for posting the comment. To use the key provided by the GitHub action runner, use `${{ secrets.GITHUB_TOKEN }}`.                                               |                        |
-| `monorepo-base-path` (**Optional**) | The location of your monrepo `packages` path                                                                                                                                     |                        |
+| `monorepo-base-path` (**Optional**) | The location of your monrepo `packages` path(s)                                                                                                                                     |                        |
 | `lcov-file` (**Optional**)          | The location of the lcov file to read the coverage report. `Needed only for single repos`                                                                                        | `./coverage/lcov.info` |
 | `lcov-base` (**Optional**)          | The location of the lcov file resulting from running the tests in the base branch. When this is set a diff of the coverage percentages is shown. `Needed only for single repos`. |                        |
 
@@ -40,6 +40,13 @@ uses: eeshdarthvader/code-coverage-assistant@v1
 with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
     monorepo-base-path: "./packages"
+```
+
+```yml
+uses: eeshdarthvader/code-coverage-assistant@v1
+with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    monorepo-base-path: ["./apps","./libs"]
 ```
 
 ![](/assets/example_monorepo.png)
