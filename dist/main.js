@@ -2,10 +2,10 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
+var os = _interopDefault(require('os'));
 var fs = require('fs');
 var fs__default = _interopDefault(fs);
 var path = _interopDefault(require('path'));
-var os = _interopDefault(require('os'));
 var http = _interopDefault(require('http'));
 var https = _interopDefault(require('https'));
 require('net');
@@ -6312,25 +6312,12 @@ const getLcovBaseFiles = (dir, filelist) => {
     return fileArray;
 };
 
-const main = async () => {
-    const { context = {} } = github$1 || {};
-
-    const token = core$1.getInput("github-token");
-    const lcovFile = core$1.getInput("lcov-file") || "./coverage/lcov.info";
-    const baseFile = core$1.getInput("lcov-base");
-    const appName = core$1.getInput("app-name");
-    // Add base path for monorepo
-    const monorepoBasePath = core$1.getInput("monorepo-base-path");
-
-    console.log({ context });
-    console.log({
-        token,
-        lcovFile,
-        baseFile,
-        appName,
-        monorepoBasePath,
-    });
-
+const main = async (
+    context,
+    client,
+    githubWorkspace,
+    { lcovFile, baseFile, appName, monorepoBasePath },
+) => {
     const raw =
         !monorepoBasePath &&
         (await fs.promises
@@ -6398,7 +6385,7 @@ const main = async () => {
     const options = {
         repository: context.payload.repository.full_name,
         commit: context.payload.pull_request.head.sha,
-        prefix: `${process.env.GITHUB_WORKSPACE}/`,
+        prefix: `${githubWorkspace}/`,
         head: context.payload.pull_request.head.ref,
         base: context.payload.pull_request.base.ref,
         appName,
@@ -6406,8 +6393,6 @@ const main = async () => {
 
     const lcov = !monorepoBasePath && (await parse$1(raw));
     const baselcov = baseRaw && (await parse$1(baseRaw));
-
-    const client = github$1.getOctokit(token);
 
     await upsertComment({
         client,
@@ -6426,7 +6411,36 @@ const main = async () => {
     });
 };
 
-main().catch(err => {
+const execute = async () => {
+    const { context = {} } = github$1 || {};
+
+    const token = core$1.getInput("github-token");
+    const lcovFile = core$1.getInput("lcov-file") || "./coverage/lcov.info";
+    const baseFile = core$1.getInput("lcov-base");
+    const appName = core$1.getInput("app-name");
+    // Add base path for monorepo
+    const monorepoBasePath = core$1.getInput("monorepo-base-path");
+
+    const client = github$1.getOctokit(token);
+
+    console.log(JSON.stringify(context, null, 2));
+    console.log(JSON.stringify(client, null, 2));
+    console.log({
+        lcovFile,
+        baseFile,
+        appName,
+        monorepoBasePath,
+    });
+
+    await main(context, client, process.env.GITHUB_WORKSPACE, {
+        lcovFile,
+        baseFile,
+        appName,
+        monorepoBasePath,
+    });
+};
+
+execute().catch(err => {
     console.log(err);
     core$1.setFailed(err.message);
 });
