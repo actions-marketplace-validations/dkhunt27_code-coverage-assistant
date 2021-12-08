@@ -60,6 +60,15 @@ const main = async () => {
     // Add base path for monorepo
     const monorepoBasePath = core.getInput("monorepo-base-path");
 
+    console.log({ context });
+    console.log({
+        token,
+        lcovFile,
+        baseFile,
+        appName,
+        monorepoBasePath,
+    });
+
     const raw =
         !monorepoBasePath &&
         (await promises
