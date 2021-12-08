@@ -46,7 +46,7 @@ with:
 uses: eeshdarthvader/code-coverage-assistant@v1
 with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    monorepo-base-path: ["./apps","./libs"]
+    monorepo-base-path: "./apps,./libs"
 ```
 
 ![](/assets/example_monorepo.png)

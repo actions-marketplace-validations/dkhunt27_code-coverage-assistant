@@ -83,21 +83,14 @@ const main = async () => {
     let lcovArray = [];
     let lcovBaseArray = [];
     if (monorepoBasePath) {
-        if (Array.isArray(monorepoBasePath)) {
-            monorepoBasePath.forEach(item => {
-                const lcovFiles = getLcovFiles(item);
-                lcovArray = lcovArray.concat(lcovFiles)
-                const lcovBaseFiles = getLcovBaseFiles(item);
-                lcovBaseArray = lcovBaseArray.concat(lcovBaseFiles)
-            });
-        } else {
-            const lcovFiles = getLcovFiles(monorepoBasePath);
+        const parts = monorepoBasePath.split(',');
+        parts.forEach(item => {
+            const lcovFiles = getLcovFiles(item);
             lcovArray = lcovArray.concat(lcovFiles)
-            const lcovBaseFiles = getLcovBaseFiles(monorepoBasePath);
+            const lcovBaseFiles = getLcovBaseFiles(item);
             lcovBaseArray = lcovBaseArray.concat(lcovBaseFiles)
-        }
+        });
     }
-
 
     const lcovArrayForMonorepo = [];
     const lcovBaseArrayForMonorepo = [];
